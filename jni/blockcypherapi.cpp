@@ -20,6 +20,16 @@
 #include "nayuki-lib/Utils.cpp"*/
 
 
+BlockCypherAPI::Web_Load_Error::Web_Load_Error(int error_code)
+{
+	code = error_code;
+}
+
+BlockCypherAPI::Json_Struct_Error::Json_Struct_Error(std::string error_text)
+{
+	text = error_text;
+}
+
 BlockCypherAPI::BlockCypherAPI()
 {
     _api_url = "https://api.blockcypher.com/v1/bcy/test/";
@@ -61,8 +71,8 @@ long BlockCypherAPI::get_balance_satoshi(BtcAddress address)
     std::string api_response;
     try
        {  api_response = _web.load_url(api_query); }
-    catch( WebClient::Load_Error )
-       { throw WebClient_Load_Error(); }
+    catch( WebClient::Load_Error err)
+       { throw Web_Load_Error(err.code); }
         
     json_t *root;
     json_error_t err;
@@ -82,15 +92,22 @@ long BlockCypherAPI::get_balance_satoshi(BtcAddress address)
 std::string BlockCypherAPI::create_new_transaction(BtcAddress sender, BtcAddress receiver, long amount)
 {
     std::string query_url =  _api_url + "txs/new";
-    std::ostringstream temp_stream;
-    temp_stream << amount;
-    std::string amount_str = temp_stream.str();
-
+    std::string amount_str = utils::ToString(amount);
     std::string data = "{\"inputs\":[{\"addresses\": [\"" + sender.address + "\"]}],\"outputs\":[{\"addresses\": [\"" + receiver.address + "\"], \"value\": " + amount_str + "}]}";
 
-    std::string response = _web.post(query_url, data);
+    std::string response;
+
+    try
+    {
+    	response = _web.post(query_url, data);
+    }
+    catch(WebClient::Load_Error err)
+    {
+    	throw Web_Load_Error(err.code);
+    }
     
-    json_t *root;
+    return response;
+   /* json_t *root;
     json_error_t err;
     json_t *tosign_array;
     json_t *tosign;
@@ -104,7 +121,52 @@ std::string BlockCypherAPI::create_new_transaction(BtcAddress sender, BtcAddress
     
     json_decref(root);    
     
-    return tosign_string;
+    return tosign_string;*/
+}
+
+std::string BlockCypherAPI::get_digest(std::string transaction)
+{
+	json_t *rootj;
+	json_error_t errj;
+	json_t *tosign_arrayj;
+	json_t *tosignj;
+
+	rootj = json_loads(transaction.c_str(), 0, &errj);
+
+	if(!rootj)
+	{
+		throw Json_Struct_Error(errj.text);
+	}
+
+	tosign_arrayj = json_object_get(rootj, "tosign");
+
+	if(!json_is_array(tosign_arrayj))
+	{
+		json_decref(rootj);
+		throw Json_Struct_Error("Failed to find tosign in body");
+	}
+
+	tosignj = json_array_get(tosign_arrayj, 0);
+
+	if(!json_is_string(tosignj))
+	{
+		json_decref(rootj);
+		throw Json_Struct_Error("Failed to find tosign in array");
+	}
+
+	std::string tosign(json_string_value(tosignj));
+	json_decref(rootj);
+
+	return tosign;
+	/*try
+	{
+		result = _web.post("http://185.62.103.104:8000/sign/",
+							"v="+tosign+"&p="+sender.private_key());
+	}
+	catch(WebClient::Load_Error err)
+	{
+		throw Web_Load_Error(err.code);
+	}*/
 }
 
 /*std::string BlockCypherAPI::sign_transaction(BtcSender sender, std::string transaction_hash)
