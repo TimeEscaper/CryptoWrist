@@ -5,25 +5,34 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
+	
+	public native String load_str(); 
+	public native String create_address();
 	
 	static {
 		System.loadLibrary("mainactivitylib");
 	}
-	
-	public native String load_str(); 
 
+
+	EditText textInput;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		EditText large_text = (EditText) findViewById(R.id.editText1);
+		textInput = (EditText) findViewById(R.id.editText1);
 		
-		large_text.setText(load_str());
+		//textInput.setText(load_str()); 
+		
+		//Button btnNew = (Button) findViewById(R.id.button1);
 	}
 
 	@Override
@@ -43,5 +52,11 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void btn1Click(View view)
+	{
+		Toast.makeText(this, "Ok", Toast.LENGTH_LONG).show();
+		textInput.setText(create_address());
 	}
 }

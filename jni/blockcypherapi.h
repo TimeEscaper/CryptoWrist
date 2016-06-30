@@ -15,7 +15,10 @@ class BlockCypherAPI
         BlockCypherAPI(std::string token, API_Mode mode);
         
         void set_token(std::string token);
+
         long get_balance_satoshi(BtcAddress address);
+        std::string create_new_address();
+
         std::string create_new_transaction(BtcAddress sender, BtcAddress receiver, long amount);
         std::string get_digest(std::string transaction);
         std::string get_signature(BtcSender sender, std::string data);
@@ -32,6 +35,11 @@ class BlockCypherAPI
         class Json_Struct_Error{
         	public:
         		Json_Struct_Error(std::string error_text);
+        		std::string text;
+        };
+        class Push_Error{
+        	public:
+        		Push_Error(std::string error_text);
         		std::string text;
         };
     

@@ -1,5 +1,6 @@
 #include "com_cryptowrist_MainActivity.h"
 #include "utils.h"
+#include "test.h"
 #include <sstream>
 
 
@@ -7,10 +8,7 @@
 JNIEXPORT jstring JNICALL Java_com_cryptowrist_MainActivity_load_1str
   (JNIEnv *pEnv, jobject senderObject)
 {
-	WebClient web_client;
 	std::string res;
-
-	//std::string to_sign = "9cc2c536d9c90b105e9c77a360cc85443f4169a5284be42c164d5a1da64c9d08";
 
 	try{
 
@@ -30,6 +28,42 @@ JNIEXPORT jstring JNICALL Java_com_cryptowrist_MainActivity_load_1str
 	{
 		return pEnv->NewStringUTF(("JSON Error: " + err.text).c_str());
 	}
+	catch(BlockCypherAPI::Push_Error err)
+	{
+		return pEnv->NewStringUTF(("Tx Push Error: " + err.text).c_str());
+	}
 
 	return pEnv->NewStringUTF(res.c_str());
+
+	/*std::string result;
+	try
+	{
+		result = btc_api.create_new_address();
+	}
+	catch(BlockCypherAPI::Web_Load_Error err)
+	{
+		return pEnv->NewStringUTF(("Load Error! Code: " + utils::ToString(err.code)).c_str());
+	}*/
 }
+
+JNIEXPORT jstring JNICALL Java_com_cryptowrist_MainActivity_create_1address
+  (JNIEnv *pEnv, jobject senderObject)
+{
+	//return pEnv->NewStringUTF("Hello!");
+	std::string result;
+	try
+	{
+		result = btc_api.create_new_address();
+	}
+	catch(BlockCypherAPI::Web_Load_Error err)
+	{
+		return pEnv->NewStringUTF(("Load Error! Code: " + utils::ToString(err.code)).c_str());
+	}
+
+	return pEnv->NewStringUTF(result.c_str());
+}
+
+
+
+
+

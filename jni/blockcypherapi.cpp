@@ -35,6 +35,11 @@ BlockCypherAPI::BlockCypherAPI()
     _api_url = "https://api.blockcypher.com/v1/bcy/test/";
 }
 
+BlockCypherAPI::Push_Error::Push_Error(std::string error_text)
+{
+	text = error_text;
+}
+
 BlockCypherAPI::BlockCypherAPI(std::string token, API_Mode mode)
 {
     _token = token;
@@ -87,6 +92,24 @@ long BlockCypherAPI::get_balance_satoshi(BtcAddress address)
     
     return res;
 
+}
+
+std::string BlockCypherAPI::create_new_address()
+{
+	std::string api_query = _api_url + "addrs";
+
+	std::string api_response;
+
+	try
+	{
+		api_response = _web.post(api_query);
+	}
+	catch(WebClient::Load_Error err)
+	{
+		throw Web_Load_Error(err.code);
+	}
+
+	return api_response;
 }
 
 std::string BlockCypherAPI::create_new_transaction(BtcAddress sender, BtcAddress receiver, long amount)
@@ -192,6 +215,28 @@ std::string BlockCypherAPI::push_transaction(std::string transaction)
 	{
 		throw Web_Load_Error(err.code);
 	}
+
+	json_t *rootj;
+	json_error_t errj;
+	json_t *errorj;
+
+	rootj = json_loads(transaction.c_str(), 0, &errj);
+
+	if(!rootj)
+	{
+		throw Json_Struct_Error(errj.text);
+	}
+
+	errorj = json_object_get(rootj, "error");
+	if(json_is_string(errorj))
+	{
+		std::string error_text(json_string_value(errorj));
+		json_decref(rootj);
+
+		throw Push_Error(error_text);
+	}
+
+	json_decref(rootj);
 
 	return result;
 }

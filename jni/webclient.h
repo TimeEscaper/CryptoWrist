@@ -18,6 +18,7 @@ class WebClient
         WebClient();
         std::string load_url(const std::string &url);
         std::string post(const std::string &url, const std::string &data_fields);
+        std::string post(const std::string &url);
 
         class Load_Error{
         	public:

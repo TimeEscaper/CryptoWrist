@@ -67,7 +67,22 @@ std::string WebClient::post(const std::string &url, const std::string &data_fiel
     CURLcode result = curl_easy_perform(_curl.get());
 
     if( result != CURLE_OK )
-        throw Post_Error();
+        throw Load_Error(result);
+
+    return _buffer;
+}
+
+std::string WebClient::post(const std::string &url)
+{
+    _url_buff = url;
+
+    curl_easy_setopt(_curl.get(), CURLOPT_CUSTOMREQUEST, "POST");
+    curl_easy_setopt(_curl.get(), CURLOPT_URL, _url_buff.c_str());
+
+    CURLcode result = curl_easy_perform(_curl.get());
+
+    if( result != CURLE_OK )
+        throw Load_Error(result);
 
     return _buffer;
 }
