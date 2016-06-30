@@ -26,7 +26,8 @@ obj/local/armeabi/objs/mainactivitylib/com_cryptowrist_MainActivity.o: \
  C:/ProgramData/Microsoft/AndroidNDK64/android-ndk-r10e/platforms/android-17/arch-arm/usr/include/alloca.h \
  C:/ProgramData/Microsoft/AndroidNDK64/android-ndk-r10e/platforms/android-17/arch-arm/usr/include/strings.h \
  C:/ProgramData/Microsoft/AndroidNDK64/android-ndk-r10e/platforms/android-17/arch-arm/usr/include/memory.h \
- jni/jansson/jansson_config.h jni/btcaddress.h
+ jni/jansson/jansson_config.h jni/btcaddress.h jni/filework.h \
+ C:/ProgramData/Microsoft/AndroidNDK64/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/vector
 
 jni/com_cryptowrist_MainActivity.h:
 
@@ -97,3 +98,7 @@ C:/ProgramData/Microsoft/AndroidNDK64/android-ndk-r10e/platforms/android-17/arch
 jni/jansson/jansson_config.h:
 
 jni/btcaddress.h:
+
+jni/filework.h:
+
+C:/ProgramData/Microsoft/AndroidNDK64/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/vector:

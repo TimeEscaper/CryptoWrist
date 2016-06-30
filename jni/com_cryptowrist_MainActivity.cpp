@@ -1,6 +1,7 @@
 #include "com_cryptowrist_MainActivity.h"
 #include "utils.h"
 #include "test.h"
+#include "filework.h"
 #include <sstream>
 
 
@@ -58,6 +59,17 @@ JNIEXPORT jstring JNICALL Java_com_cryptowrist_MainActivity_create_1address
 	catch(BlockCypherAPI::Web_Load_Error err)
 	{
 		return pEnv->NewStringUTF(("Load Error! Code: " + utils::ToString(err.code)).c_str());
+	}
+
+	FileWork fm;
+
+	try
+	{
+		fm.save_address(new_addr);
+	}
+	catch(FileWork::IO_Error)
+	{
+		return pEnv->NewStringUTF("I/O Error!");
 	}
 
 	return pEnv->NewStringUTF(new_addr.address.c_str());

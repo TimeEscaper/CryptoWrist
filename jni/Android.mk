@@ -19,7 +19,7 @@ include $(PREBUILT_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := mainactivitylib
-LOCAL_SRC_FILES += com_cryptowrist_MainActivity.cpp webclient.cpp utils.cpp btcaddress.cpp blockcypherapi.cpp
+LOCAL_SRC_FILES += com_cryptowrist_AddressActivity.cpp com_cryptowrist_MainActivity.cpp webclient.cpp utils.cpp btcaddress.cpp blockcypherapi.cpp filework.cpp
 #LOCAL_LDLIBS := -ljansson
 LOCAL_SHARED_LIBRARIES := curl-prebuild 
 LOCAL_STATIC_LIBRARIES := jansson-prebuild

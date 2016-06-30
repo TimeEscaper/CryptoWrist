@@ -124,9 +124,9 @@ BtcSender BlockCypherAPI::create_new_address()
 	pub = json_object_get(rootj, "public");
 	addr = json_object_get(rootj, "address");
 
-	BtcSender result(std::string(json_string_value(pr)),
+	BtcSender result(std::string(json_string_value(addr)),
 					 std::string(json_string_value(pub)),
-					 std::string(json_string_value(addr)));
+					 std::string(json_string_value(pr)));
 
 	json_decref(rootj);
 

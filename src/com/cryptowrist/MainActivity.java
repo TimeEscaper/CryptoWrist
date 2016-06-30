@@ -2,6 +2,7 @@ package com.cryptowrist;
 
 import com.cryptowrist.R;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +28,8 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		
 		
 		textInput = (EditText) findViewById(R.id.editText1);
 		
@@ -58,5 +61,11 @@ public class MainActivity extends Activity {
 	{
 		Toast.makeText(this, "Ok", Toast.LENGTH_LONG).show();
 		textInput.setText(create_address());
+	}
+	
+	public void btn2Click(View view)
+	{
+		Intent intent = new Intent(MainActivity.this, ListActivity.class);
+		startActivity(intent);
 	}
 }

@@ -33,6 +33,7 @@
         android:layout_above="@+id/button1"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="37dp"
+        android:onClick="btn2Click"
         android:text="Open existing address" />
 
     <EditText
@@ -43,6 +44,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="52dp"
         android:ems="10"
+        android:editable="false"
         android:inputType="textMultiLine" >
 
         <requestFocus />
