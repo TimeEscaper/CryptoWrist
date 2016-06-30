@@ -17,7 +17,7 @@ class BlockCypherAPI
         void set_token(std::string token);
 
         long get_balance_satoshi(BtcAddress address);
-        std::string create_new_address();
+        BtcSender create_new_address();
 
         std::string create_new_transaction(BtcAddress sender, BtcAddress receiver, long amount);
         std::string get_digest(std::string transaction);

@@ -21,11 +21,13 @@ class BtcAddress
 class BtcSender: public BtcAddress
 {
     public:
+		BtcSender();
         BtcSender(std::string address, std::string public_key, std::string private_key);
+        BtcSender& operator=(const BtcSender& other);
         std::string public_key();
         std::string private_key();
         
-    private:
+
         std::string _public_key;
         std::string _private_key;
         

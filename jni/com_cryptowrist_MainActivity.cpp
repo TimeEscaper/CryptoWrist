@@ -50,17 +50,17 @@ JNIEXPORT jstring JNICALL Java_com_cryptowrist_MainActivity_create_1address
   (JNIEnv *pEnv, jobject senderObject)
 {
 	//return pEnv->NewStringUTF("Hello!");
-	std::string result;
+	BtcSender new_addr;
 	try
 	{
-		result = btc_api.create_new_address();
+		new_addr = btc_api.create_new_address();
 	}
 	catch(BlockCypherAPI::Web_Load_Error err)
 	{
 		return pEnv->NewStringUTF(("Load Error! Code: " + utils::ToString(err.code)).c_str());
 	}
 
-	return pEnv->NewStringUTF(result.c_str());
+	return pEnv->NewStringUTF(new_addr.address.c_str());
 }
 
 

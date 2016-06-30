@@ -94,7 +94,7 @@ long BlockCypherAPI::get_balance_satoshi(BtcAddress address)
 
 }
 
-std::string BlockCypherAPI::create_new_address()
+BtcSender BlockCypherAPI::create_new_address()
 {
 	std::string api_query = _api_url + "addrs";
 
@@ -109,7 +109,28 @@ std::string BlockCypherAPI::create_new_address()
 		throw Web_Load_Error(err.code);
 	}
 
-	return api_response;
+	json_t *rootj;
+	json_error_t errj;
+	json_t *pr, *pub, *addr;
+
+	rootj = json_loads(api_response.c_str(), 0, &errj);
+
+	if(!rootj)
+	{
+		throw Json_Struct_Error(errj.text);
+	}
+
+	pr = json_object_get(rootj, "private");
+	pub = json_object_get(rootj, "public");
+	addr = json_object_get(rootj, "address");
+
+	BtcSender result(std::string(json_string_value(pr)),
+					 std::string(json_string_value(pub)),
+					 std::string(json_string_value(addr)));
+
+	json_decref(rootj);
+
+	return result;
 }
 
 std::string BlockCypherAPI::create_new_transaction(BtcAddress sender, BtcAddress receiver, long amount)
