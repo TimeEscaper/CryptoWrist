@@ -18,8 +18,8 @@ JNIEXPORT jstring JNICALL Java_com_cryptowrist_MainActivity_load_1str
 		std::string digest = btc_api.get_digest(tx);
  		std::string sig = btc_api.get_signature(address_1, digest);
 		tx = btc_api.add_signature(address_1, sig, tx);
-		res = tx;
-		//res = btc_api.push_transaction(tx);
+		//res = tx;
+		res = btc_api.push_transaction(tx);
 	}
 
 	catch(BlockCypherAPI::Web_Load_Error err)

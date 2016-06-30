@@ -173,7 +173,10 @@ std::string BlockCypherAPI::add_signature(BtcSender sender, std::string signatur
 	}
 
 	transaction[transaction.length()-1] = ',';
-	transaction.append("\"signatures:\"[\"" + signature + "\"],\"pubkeys:\"[\"" + sender.public_key() + "\"]}");
+	//transaction = ";";
+	transaction.append("\"signatures\": [ \"" + signature + "\" ], \"pubkeys\": [ \"" + sender.public_key() + "\" ]}");
+
+	return transaction;
 }
 
 std::string BlockCypherAPI::push_transaction(std::string transaction)
