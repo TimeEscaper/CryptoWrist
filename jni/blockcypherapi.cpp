@@ -107,21 +107,6 @@ std::string BlockCypherAPI::create_new_transaction(BtcAddress sender, BtcAddress
     }
     
     return response;
-   /* json_t *root;
-    json_error_t err;
-    json_t *tosign_array;
-    json_t *tosign;
-    
-    root = json_loads(response.c_str(), 0, &err);
-    tosign_array = json_object_get(root, "tosign");
-    
-    tosign = json_array_get(tosign_array, 0);
-    
-    std::string tosign_string(json_string_value(tosign));
-    
-    json_decref(root);    
-    
-    return tosign_string;*/
 }
 
 std::string BlockCypherAPI::get_digest(std::string transaction)
@@ -158,52 +143,58 @@ std::string BlockCypherAPI::get_digest(std::string transaction)
 	json_decref(rootj);
 
 	return tosign;
-	/*try
+
+}
+
+std::string BlockCypherAPI::get_signature(BtcSender sender, std::string data)
+{
+	std::string result=" ";
+
+	try
 	{
 		result = _web.post("http://185.62.103.104:8000/sign/",
-							"v="+tosign+"&p="+sender.private_key());
+							"pr="+sender.private_key()+
+							"&pub="+sender.public_key()+
+							"&data="+data);
 	}
 	catch(WebClient::Load_Error err)
 	{
 		throw Web_Load_Error(err.code);
-	}*/
+	}
+
+	return result;
 }
 
-/*std::string BlockCypherAPI::sign_transaction(BtcSender sender, std::string transaction_hash)
+std::string BlockCypherAPI::add_signature(BtcSender sender, std::string signature, std::string transaction)
 {
-    elliptic_curve_key c;
-    c.set_private_key(sender.private_key().begin(), sender.private_key().end());
-    payment_address address; 
-    set_public_key(address, c.public_key());
-    std::cout<<address.encoded()<<std::endl;*/
-    
-    /*Uint256 key(sender.private_key().c_str());
-    Sha256Hash res(transaction_hash.c_str());*/
-    /*Uint256 key("FF4FFB81BBED24D48975AE17A50B8B16FA63DFBBD4A457EA39BA60B1BBD19FC9");
-    Sha256Hash res("FE2AC4337F4144A9BC3845CBB8F507B14EEA5E3C0215F54CCA22EE1D3F8A20D0");
-    Uint256 r, s;
-    bool is_signed = Ecdsa::signWithHmacNonce(key, res, r, s);
-    
-    std::cout<<"Is Signed: "<<is_signed<<std::endl;
-    uint8_t bigen_r [32];
-    r.getBigEndianBytes(bigen_r);
-    uint8_t bigen_s [32];
-    s.getBigEndianBytes(bigen_s);
-    std::stringstream res_stream;
-    
-    for(int i = 0; i < 32; i++)
-        res_stream<<std::hex<<unsigned(bigen_r[i]);
-    
-    res_stream << "\n";    
-        
-    for(int i = 0; i < 32; i++)
-        res_stream<<std::hex<<unsigned(bigen_s[i]);
-    
-   // std::cout<<"\n"<<std::endl;
-    //std::cout<<r<<std::endl;
-  //  std::cout<<s<<std::endl;
-    std::string result(res_stream.str());
-    
-    return result;
-    
-}*/
+	if(transaction.length() == 0)
+	{
+		throw Json_Struct_Error("Empty transaction!");
+	}
+
+	transaction[transaction.length()-1] = ',';
+	transaction.append("\"signatures:\"[\"" + signature + "\"],\"pubkeys:\"[\"" + sender.public_key() + "\"]}");
+}
+
+std::string BlockCypherAPI::push_transaction(std::string transaction)
+{
+	std::string result;
+	std::string query_url =  _api_url + "txs/send?token=" + _token;
+
+	try
+	{
+		result = _web.post(query_url, transaction);
+	}
+	catch(WebClient::Load_Error err)
+	{
+		throw Web_Load_Error(err.code);
+	}
+
+	return result;
+}
+
+
+
+
+
+

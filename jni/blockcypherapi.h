@@ -18,6 +18,9 @@ class BlockCypherAPI
         long get_balance_satoshi(BtcAddress address);
         std::string create_new_transaction(BtcAddress sender, BtcAddress receiver, long amount);
         std::string get_digest(std::string transaction);
+        std::string get_signature(BtcSender sender, std::string data);
+        std::string add_signature(BtcSender sender, std::string signature, std::string transaction);
+        std::string push_transaction(std::string transaction);
         
         class Mode_Init_Error{};
         class Web_Init_Error{};

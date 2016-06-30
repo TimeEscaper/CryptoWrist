@@ -1,9 +1,11 @@
 package com.cryptowrist;
 
+import com.cryptowrist.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -12,14 +14,14 @@ public class MainActivity extends Activity {
 		System.loadLibrary("mainactivitylib");
 	}
 	
-	public native String load_str();
+	public native String load_str(); 
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		TextView large_text = (TextView) findViewById(R.id.textView1);
+		EditText large_text = (EditText) findViewById(R.id.editText1);
 		
 		large_text.setText(load_str());
 	}

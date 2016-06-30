@@ -7,6 +7,7 @@
 
 size_t _write_function_callback(char* ptr, size_t size, size_t nmemb, std::string* userdata)
 {
+	userdata->clear();
 	if(!userdata)
 		return 0;
 	else
